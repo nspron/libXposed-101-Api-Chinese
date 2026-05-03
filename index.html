@@ -3,618 +3,504 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>libxposed API 完整参考文档 (中文版)</title>
+    <title>libxposed API 完整参考文档 (中文版 · 可折叠)</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --code-bg: #f4f4f4;
-            --border: #ddd;
-            --table-header: #2c3e50;
-            --table-header-text: #fff;
+        * {
+            box-sizing: border-box;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #333;
-            max-width: 1200px;
+            color: #1a1a2e;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #fafafc;
         }
-        h1, h2, h3, h4 {
-            color: var(--primary);
-            margin-top: 1.5em;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.3em;
+        h1 {
+            text-align: center;
+            color: #0f3460;
+            border-bottom: 3px solid #16213e;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
-        h1 { text-align: center; border-bottom: 2px solid var(--secondary); }
-        h2 { border-left: 4px solid var(--secondary); padding-left: 15px; }
-        code {
-            background-color: var(--code-bg);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
+        h2 {
+            color: #0f3460;
+            border-left: 5px solid #e94560;
+            padding-left: 15px;
+            margin-top: 30px;
+            cursor: pointer;
+            background-color: #f0f2f5;
+            border-radius: 0 12px 12px 0;
+            transition: all 0.2s;
         }
-        pre {
-            background-color: var(--code-bg);
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            border: 1px solid var(--border);
+        h2:hover {
+            background-color: #e2e6ea;
+        }
+        .package-content {
+            margin-bottom: 30px;
+        }
+        .class-card {
+            margin: 15px 0 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+        .class-header {
+            padding: 12px 20px;
+            background-color: #f8f9fe;
+            cursor: pointer;
+            border-radius: 12px 12px 0 0;
+            font-weight: 600;
+            font-size: 1.2em;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .class-header:hover {
+            background-color: #eef2ff;
+        }
+        .class-header .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.2s;
+        }
+        .class-details {
+            display: none;
+            padding: 10px 20px 20px 20px;
+            border-top: none;
+        }
+        .class-details.show {
+            display: block;
+        }
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            color: #2c3e66;
+            border-left: 4px solid #e94560;
+            padding-left: 10px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1em 0;
+            margin: 15px 0;
+            font-size: 0.9em;
         }
         th, td {
-            border: 1px solid var(--border);
-            padding: 10px 12px;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
             text-align: left;
             vertical-align: top;
         }
         th {
-            background-color: var(--table-header);
-            color: var(--table-header-text);
+            background-color: #2c3e66;
+            color: white;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        pre {
+            background-color: #f4f4f4;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            border: 1px solid #e0e0e0;
         }
-        ul, ol {
-            padding-left: 1.5em;
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
         }
-        a {
-            color: var(--secondary);
-            text-decoration: none;
+        .method-signature {
+            font-family: monospace;
+            background-color: #f8f8f8;
+            padding: 6px 10px;
+            border-left: 3px solid #e94560;
+            margin: 12px 0;
         }
-        a:hover {
-            text-decoration: underline;
+        .badge {
+            background-color: #e94560;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            margin-left: 10px;
         }
         .toc {
-            background-color: #f8f9fa;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 1px solid var(--border);
+            background-color: #ffffffdd;
+            backdrop-filter: blur(8px);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            max-height: 400px;
+            overflow-y: auto;
         }
         .toc ul {
+            columns: 2;
+            column-gap: 30px;
             margin: 0;
             padding-left: 20px;
         }
-        .toc li {
-            margin: 5px 0;
+        @media (max-width: 700px) {
+            .toc ul { columns: 1; }
         }
-        .toc > ul {
-            columns: 2;
-            column-gap: 40px;
+        .toc a {
+            text-decoration: none;
+            color: #0f3460;
         }
-        @media (max-width: 768px) {
-            .toc > ul {
-                columns: 1;
-            }
-            body {
-                padding: 15px;
-            }
-            th, td {
-                padding: 6px 8px;
-            }
+        .toc a:hover {
+            text-decoration: underline;
+            color: #e94560;
         }
         hr {
-            margin: 30px 0;
-            border: none;
-            border-top: 1px solid var(--border);
+            margin: 25px 0;
         }
-        blockquote {
-            background-color: #f8f9fa;
-            border-left: 4px solid var(--secondary);
-            margin: 1em 0;
-            padding: 0.5em 1em;
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 15px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
         }
     </style>
 </head>
 <body>
 
-<h1>libxposed API 完整参考文档 (中文版)</h1>
-
+<h1>📚 libxposed API 完整参考文档 (中文版)</h1>
 <div class="toc">
+    <strong>📖 目录 (点击类名跳转，点击类标题展开详情)</strong>
     <ul>
-        <li><a href="#概述">概述</a>
+        <li><a href="#package-api">📦 io.github.libxposed.api</a>
             <ul>
-                <li><a href="#快速入门">快速入门</a></li>
-                <li><a href="#入口注册">入口注册</a></li>
-                <li><a href="#模块配置">模块配置</a></li>
-                <li><a href="#作用域-scope">作用域 (Scope)</a></li>
-                <li><a href="#hook-模型">Hook 模型</a></li>
-                <li><a href="#invoker-系统">Invoker 系统</a></li>
-                <li><a href="#模块生命周期回调">模块生命周期回调</a></li>
-                <li><a href="#错误处理">错误处理</a></li>
+                <li><a href="#XposedInterface">XposedInterface</a></li>
+                <li><a href="#Chain">XposedInterface.Chain</a></li>
+                <li><a href="#CtorInvoker">XposedInterface.CtorInvoker</a></li>
+                <li><a href="#ExceptionMode">XposedInterface.ExceptionMode</a></li>
+                <li><a href="#HookBuilder">XposedInterface.HookBuilder</a></li>
+                <li><a href="#Hooker">XposedInterface.Hooker</a></li>
+                <li><a href="#HookHandle">XposedInterface.HookHandle</a></li>
+                <li><a href="#Invoker">XposedInterface.Invoker</a></li>
+                <li><a href="#InvokerType">XposedInterface.Invoker.Type</a></li>
+                <li><a href="#XposedInterfaceWrapper">XposedInterfaceWrapper</a></li>
+                <li><a href="#XposedModule">XposedModule</a></li>
+                <li><a href="#XposedModuleInterface">XposedModuleInterface</a></li>
             </ul>
         </li>
-        <li><a href="#包-io-github-libxposed-api">包 io.github.libxposed.api</a>
+        <li><a href="#package-error">📦 io.github.libxposed.api.error</a>
             <ul>
-                <li><a href="#接口-xposedinterface">接口 XposedInterface</a></li>
-                <li><a href="#接口-xposedinterfacechain">接口 XposedInterface.Chain</a></li>
-                <li><a href="#接口-xposedinterfacectorinvoker">接口 XposedInterface.CtorInvoker</a></li>
-                <li><a href="#枚举-xposedinterfaceexceptionmode">枚举 XposedInterface.ExceptionMode</a></li>
-                <li><a href="#接口-xposedinterfacehookbuilder">接口 XposedInterface.HookBuilder</a></li>
-                <li><a href="#接口-xposedinterfacehooker">接口 XposedInterface.Hooker</a></li>
-                <li><a href="#接口-xposedinterfacehookhandle">接口 XposedInterface.HookHandle</a></li>
-                <li><a href="#接口-xposedinterfaceinvoker">接口 XposedInterface.Invoker</a></li>
-                <li><a href="#接口-xposedinterfaceinvokertype">接口 XposedInterface.Invoker.Type</a></li>
-                <li><a href="#类-xposedinterfacewrapper">类 XposedInterfaceWrapper</a></li>
-                <li><a href="#类-xposedmodule">类 XposedModule</a></li>
-                <li><a href="#接口-xposedmoduleinterface">接口 XposedModuleInterface</a></li>
-            </ul>
-        </li>
-        <li><a href="#包-io-github-libxposed-apierror">包 io.github.libxposed.api.error</a>
-            <ul>
-                <li><a href="#类-xposedframeworkerror">类 XposedFrameworkError</a></li>
-                <li><a href="#类-hookfailederror">类 HookFailedError</a></li>
+                <li><a href="#XposedFrameworkError">XposedFrameworkError</a></li>
+                <li><a href="#HookFailedError">HookFailedError</a></li>
             </ul>
         </li>
     </ul>
 </div>
 
-<hr>
-
-<h2 id="概述">概述</h2>
-<p>现代 Xposed 模块 API。本包提供了使用现代 Xposed 框架开发 Xposed 模块的公共 API，它用一个重新设计的、类型安全的接口取代了旧版 XposedBridge API。</p>
-
-<h3 id="快速入门">快速入门</h3>
-<p>模块入口类应继承 <a href="#类-xposedmodule"><code>XposedModule</code></a>。框架会自动调用 <code>attachFramework()</code> 方法；在 <code>onModuleLoaded()</code> 被调用之前，模块<strong>不</strong>应执行初始化工作。</p>
-
-<h3 id="入口注册">入口注册</h3>
-<ul>
-    <li><strong>Java 入口</strong>: 在 <code>META-INF/xposed/java_init.list</code> 中列出（每行一个完整的类名）。</li>
-    <li><strong>Native 入口</strong>: 使用 <code>META-INF/xposed/native_init.list</code>。</li>
-</ul>
-<p>将这些文件放在 <code>src/main/resources/META-INF/xposed/</code> 下，Gradle 会自动将它们打包到 APK 中。</p>
-
-<h3 id="模块配置">模块配置</h3>
-<p>模块元数据通过标准的 Android 资源（<code>android:label</code> 作为模块名称，<code>android:description</code> 作为描述）和 <code>META-INF/xposed/module.prop</code>（Java <code>Properties</code> 格式）指定。必需的属性：</p>
-<ul>
-    <li><code>minApiVersion</code> – 所需的最低 Xposed API 版本</li>
-    <li><code>targetApiVersion</code> – 目标的 Xposed API 版本</li>
-</ul>
-<p>可选属性：</p>
-<ul>
-    <li><code>staticScope</code> (boolean) – 模块作用域是否固定，用户不应在作用域列表之外的应用上启用模块。</li>
-    <li><code>exceptionMode</code> (string) [<code>protective</code>|<code>passthrough</code>] – 默认为 <code>protective</code>，参见 <a href="#枚举-xposedinterfaceexceptionmode"><code>ExceptionMode</code></a>。</li>
-</ul>
-
-<h3 id="作用域-scope">作用域 (Scope)</h3>
-<p>模块作用域由 <code>META-INF/xposed/scope.list</code> 中的包名列表定义。框架会将模块注入到这些包所声明的所有常规进程中。注入后，该进程中加载的每个包都会触发回调。因此，模块可能会收到超出原始作用域包的回调，所以它们应始终根据进程名和包名进行过滤。</p>
-<p>对于在 <code>android:sharedUserId="android.uid.system"</code> 包中声明了 <code>android:process="system"</code> 的组件，它们运行在 system server 中。对于那些所有组件都运行在 system server 中的包，将包名本身添加到作用域是无效的。相反，system server 用特殊的虚拟包名 <code>system</code> 表示，应明确使用它。</p>
-<p>注意：<code>android</code> 包仍然是一个有效的作用域目标，因为它的一些组件声明了 <code>android:process=":ui"</code>，因此不运行在 system server 中。作用域为 <code>android</code> 的模块仍然可以接收到 <code>android</code> 包加载的事件，即使 <code>android</code> 包本身没有代码。相比之下，<code>com.android.providers.settings</code> 不是一个有效的作用域目标，模块应使用 <code>system</code> 作用域，然后等待 <code>com.android.providers.settings</code> 包加载事件。</p>
-
-<h3 id="hook-模型">Hook 模型</h3>
-<p>API 使用<strong>拦截器链</strong>模型（类似于 OkHttp 的拦截器）。模块实现 <a href="#接口-xposedinterfacehooker"><code>Hooker</code></a> 接口及其 <code>intercept(Chain)</code> 方法。通过 <code>hook(Executable)</code> 返回的构建器来执行 Hook：</p>
-<pre><code>HookHandle handle = hook(method)
-    .setPriority(PRIORITY_DEFAULT)
-    .setExceptionMode(ExceptionMode.PROTECTIVE)
-    .intercept(chain -> {
-        // 预处理
-        Object result = chain.proceed();
-        // 后处理
-        return result;
-    });
-</code></pre>
-
-<h3 id="invoker-系统">Invoker 系统</h3>
-<p>要绕过访问检查调用原始（或被 Hook 的）方法，可以通过 <code>getInvoker(Method)</code> 或 <code>getInvoker(Constructor)</code> 获取 <a href="#接口-xposedinterfaceinvoker"><code>Invoker</code></a>。调用器类型控制执行 Hook 链的哪一部分（参见 <a href="#接口-xposedinterfaceinvokertype"><code>Invoker.Type</code></a>）。</p>
-
-<h3 id="模块生命周期回调">模块生命周期回调</h3>
-<p>在 <a href="#类-xposedmodule"><code>XposedModule</code></a> 中重写以下回调：</p>
-<ul>
-    <li><a href="#onmoduleloaded"><code>onModuleLoaded()</code></a> – 当模块被加载到目标进程时调用一次。</li>
-    <li><a href="#onpackageloaded"><code>onPackageLoaded()</code></a> – 当默认类加载器准备就绪时调用，在 <code>AppComponentFactory</code> 实例化之前（API 29+）。</li>
-    <li><a href="#onpackageready"><code>onPackageReady()</code></a> – 在应用的类加载器创建之后调用。</li>
-    <li><a href="#onsystemserverstarting"><code>onSystemServerStarting()</code></a> – 在 system server 启动时调用一次。此回调取代了第一个包加载阶段。</li>
-</ul>
-
-<h3 id="错误处理">错误处理</h3>
-<p>框架级别的错误通过 <a href="#类-xposedframeworkerror"><code>XposedFrameworkError</code></a> 的子类报告。特别是 <a href="#类-hookfailederror"><code>HookFailedError</code></a> 表示致命的 Hook 失败，应报告给框架维护者，而不是由模块处理。</p>
-
-<hr>
-
-<h2 id="包-io-github-libxposed-api">包 <code>io.github.libxposed.api</code></h2>
-<p>这是现代 Xposed 模块 API 的核心包。</p>
-
-<h3 id="接口-xposedinterface">接口 <code>XposedInterface</code></h3>
-<p>Xposed 框架提供给模块操作应用进程的核心接口。</p>
-
-<h4>嵌套接口摘要</h4>
-<table>
-    <tr><th>接口</th><th>描述</th></tr>
-    <tr><td><code>XposedInterface.Chain</code></td><td>方法或构造函数的<strong>拦截器链</strong>。</td></tr>
-    <tr><td><code>XposedInterface.CtorInvoker&lt;T&gt;</code></td><td><strong>构造函数的调用器</strong>，用于绕过访问检查创建实例。</td></tr>
-    <tr><td><code>XposedInterface.ExceptionMode</code></td><td><strong>Hook 的异常处理模式</strong>枚举。</td></tr>
-    <tr><td><code>XposedInterface.HookBuilder</code></td><td><strong>Hook 的配置构建器</strong>，用于设置优先级和异常模式。</td></tr>
-    <tr><td><code>XposedInterface.Hooker</code></td><td><strong>Hooker 接口</strong>，模块需要实现它来定义拦截逻辑。</td></tr>
-    <tr><td><code>XposedInterface.HookHandle</code></td><td><strong>Hook 的句柄</strong>，用于取消一个已经激活的 Hook。</td></tr>
-    <tr><td><code>XposedInterface.Invoker&lt;T, U&gt;</code></td><td><strong>方法或构造函数的通用调用器</strong>，用于绕过访问检查进行调用。</td></tr>
-</table>
-
-<h4>字段常量</h4>
-<table>
-    <tr><th>常量</th><th>类型</th><th>值</th><th>描述</th></tr>
-    <tr><td><code>API_101</code></td><td>int</td><td>101</td><td>第一个 API 版本。<br><strong>行为变化（所有模块）</strong>：模块不能注入到 zygote；它们只在作用域进程内加载。<br><strong>行为变化（目标 API 101 或更高）</strong>：这是第一个 API 版本。</td></tr>
-    <tr><td><code>LIB_API</code></td><td>int</td><td>101</td><td><strong>此库</strong>的 API 版本。模块应使用 <code>getApiVersion()</code> 检查运行时版本。</td></tr>
-    <tr><td><code>PROP_CAP_SYSTEM</code></td><td>long</td><td>1 &lt;&lt; 0</td><td>框架有能力 Hook <code>system_server</code> 和其他系统进程。</td></tr>
-    <tr><td><code>PROP_CAP_REMOTE</code></td><td>long</td><td>1 &lt;&lt; 1</td><td>框架提供远程配置（<code>SharedPreferences</code>）和远程文件支持。</td></tr>
-    <tr><td><code>PROP_RT_API_PROTECTION</code></td><td>long</td><td>1 &lt;&lt; 32</td><td>框架禁止通过反射或动态加载的代码访问 Xposed API。</td></tr>
-    <tr><td><code>PRIORITY_DEFAULT</code></td><td>int</td><td>50</td><td>默认 Hook 优先级。</td></tr>
-    <tr><td><code>PRIORITY_LOWEST</code></td><td>int</td><td>0</td><td>最低优先级，在拦截器链的<strong>末尾</strong>执行。</td></tr>
-    <tr><td><code>PRIORITY_HIGHEST</code></td><td>int</td><td>100</td><td>最高优先级，在拦截器链的<strong>开头</strong>执行。</td></tr>
-</table>
-
-<h4>方法详细说明</h4>
-
-<h5><code>getApiVersion</code></h5>
-<pre><code>default int getApiVersion()</code></pre>
-<p>获取运行时的 Xposed API 版本。框架实现<strong>不</strong>应重写此方法。</p>
-<p><strong>返回</strong>: 运行时 API 版本号。</p>
-
-<h5><code>getFrameworkName</code></h5>
-<pre><code>@NonNull String getFrameworkName()</code></pre>
-<p>获取当前 Xposed 框架实现的名称。</p>
-<p><strong>返回</strong>: 框架名称，非空。</p>
-
-<h5><code>getFrameworkVersion</code></h5>
-<pre><code>@NonNull String getFrameworkVersion()</code></pre>
-<p>获取当前 Xposed 框架实现的版本。</p>
-<p><strong>返回</strong>: 框架版本字符串，非空。</p>
-
-<h5><code>getFrameworkVersionCode</code></h5>
-<pre><code>long getFrameworkVersionCode()</code></pre>
-<p>获取当前 Xposed 框架实现的版本号。</p>
-<p><strong>返回</strong>: 框架版本号（长整型）。</p>
-
-<h5><code>getFrameworkProperties</code></h5>
-<pre><code>long getFrameworkProperties()</code></pre>
-<p>获取 Xposed 框架的属性。前缀为 <code>PROP_RT_</code> 的属性可能在启动间发生变化。</p>
-<p><strong>返回</strong>: 属性位掩码。</p>
-
-<h5><code>hook</code></h5>
-<pre><code>@NonNull HookBuilder hook(@NonNull Executable origin)</code></pre>
-<p>Hook 一个普通方法或构造函数。</p>
-<p><strong>参数</strong>:
-<ul><li><code>origin</code>: 要被 Hook 的可执行对象（<code>Method</code> 或 <code>Constructor</code>）。</li></ul>
-<strong>返回</strong>: Hook 的构建器，用于进一步配置。</p>
-
-<h5><code>hookClassInitializer</code></h5>
-<pre><code>@NonNull HookBuilder hookClassInitializer(@NonNull Class&lt;?&gt; origin)</code></pre>
-<p>Hook 一个类的静态初始化器 (<code>&lt;clinit&gt;</code>)。静态初始化器被视为一个无参数的 <code>static void</code> 方法。传递给 Hooker 的 <code>Chain</code> 中：<code>getExecutable()</code> 返回一个代表静态初始化器的合成 <code>Method</code>；<code>getThisObject()</code> 始终返回 <code>null</code>；<code>getArgs()</code> 返回空列表；<code>proceed()</code> 返回 <code>null</code>。</p>
-<p>注意：如果类已经被初始化，该 Hook 永远不会被调用。</p>
-<p><strong>参数</strong>:
-<ul><li><code>origin</code>: 要 Hook 其静态初始化器的类。</li></ul>
-<strong>返回</strong>: Hook 的构建器。</p>
-
-<h5><code>deoptimize</code></h5>
-<pre><code>boolean deoptimize(@NonNull Executable executable)</code></pre>
-<p>去优化一个方法/构造函数，用于解决因内联导致 Hook 不生效的问题。</p>
-<p><strong>参数</strong>:
-<ul><li><code>executable</code>: 要去优化的方法或构造函数。</li></ul>
-<strong>返回</strong>: 去优化是否成功。</p>
-
-<h5><code>getInvoker</code> (方法)</h5>
-<pre><code>@NonNull Invoker&lt;?, Method&gt; getInvoker(@NonNull Method method)</code></pre>
-<p>获取一个方法调用器。调用器将绕过访问检查。默认类型是 <code>FULL</code>。</p>
-<p><strong>参数</strong>:
-<ul><li><code>method</code>: 要获取调用器的方法。</li></ul>
-<strong>返回</strong>: 方法调用器。</p>
-
-<h5><code>getInvoker</code> (构造函数)</h5>
-<pre><code>@NonNull &lt;T&gt; CtorInvoker&lt;T&gt; getInvoker(@NonNull Constructor&lt;T&gt; constructor)</code></pre>
-<p>获取一个构造函数的调用器。调用器将绕过访问检查。默认类型是 <code>FULL</code>。</p>
-<p><strong>参数</strong>:
-<ul><li><code>constructor</code>: 要获取调用器的构造函数。</li></ul>
-<strong>返回</strong>: 构造函数调用器。</p>
-
-<h5><code>log</code> (简单消息)</h5>
-<pre><code>void log(int priority, @Nullable String tag, @NonNull String msg)</code></pre>
-<p>向 Xposed 日志中写入一条消息。</p>
-<p><strong>参数</strong>:
-<ul><li><code>priority</code>: 日志优先级，参见 <code>android.util.Log</code>。</li>
-<li><code>tag</code>: 日志标签，可为 <code>null</code>。</li>
-<li><code>msg</code>: 日志消息，非空。</li></ul></p>
-
-<h5><code>log</code> (带异常)</h5>
-<pre><code>void log(int priority, @Nullable String tag, @NonNull String msg, @Nullable Throwable tr)</code></pre>
-<p>向 Xposed 日志中写入一条带异常信息的消息。</p>
-
-<h5><code>getModuleApplicationInfo</code></h5>
-<pre><code>@NonNull ApplicationInfo getModuleApplicationInfo()</code></pre>
-<p>获取模块自身的 <code>ApplicationInfo</code>。</p>
-
-<h5><code>getRemotePreferences</code></h5>
-<pre><code>@NonNull SharedPreferences getRemotePreferences(@NonNull String group)</code></pre>
-<p>获取存储在 Xposed 框架中的远程配置。注意：在 Hook 的应用中是<strong>只读</strong>的。如果框架是嵌入式的，会抛出 <code>UnsupportedOperationException</code>。</p>
-
-<h5><code>listRemoteFiles</code></h5>
-<pre><code>@NonNull String[] listRemoteFiles()</code></pre>
-<p>列出模块在框架中共享数据目录下的所有文件。如果框架是嵌入式的，会抛出 <code>UnsupportedOperationException</code>。</p>
-
-<h5><code>openRemoteFile</code></h5>
-<pre><code>@NonNull ParcelFileDescriptor openRemoteFile(@NonNull String name) throws FileNotFoundException</code></pre>
-<p><strong>只读</strong>方式打开模块在框架中共享数据目录下的一个文件。文件名不能包含路径分隔符、<code>.</code> 或 <code>..</code>。</p>
-
-<hr>
-
-<h3 id="接口-xposedinterfacechain">接口 <code>XposedInterface.Chain</code></h3>
-<p>拦截器链，代表一次方法或构造函数的调用。<code>Chain</code> 对象不能在线程间共享，也不能在 <code>Hooker.intercept(Chain)</code> 结束后重用。</p>
-
-<h4>方法详细说明</h4>
-
-<h5><code>getExecutable</code></h5>
-<pre><code>@NonNull Executable getExecutable()</code></pre>
-<p>获取当前被 Hook 的方法或构造函数。</p>
-
-<h5><code>getThisObject</code></h5>
-<pre><code>Object getThisObject()</code></pre>
-<p>获取调用的 <code>this</code> 对象。对于静态方法，返回 <code>null</code>。</p>
-
-<h5><code>getArgs</code></h5>
-<pre><code>@NonNull List&lt;Object&gt; getArgs()</code></pre>
-<p>获取调用参数的不可变列表。</p>
-
-<h5><code>getArg</code></h5>
-<pre><code>Object getArg(int index) throws IndexOutOfBoundsException, ClassCastException</code></pre>
-<p>获取指定索引位置的参数。</p>
-
-<h5><code>proceed</code> (无参)</h5>
-<pre><code>Object proceed() throws Throwable</code></pre>
-<p>继续执行拦截器链，使用相同的 <code>this</code> 对象和参数。</p>
-
-<h5><code>proceed</code> (带新参数)</h5>
-<pre><code>Object proceed(@NonNull Object[] args) throws Throwable</code></pre>
-<p>继续执行拦截器链，使用相同的 <code>this</code> 对象和新的参数。</p>
-
-<h5><code>proceedWith</code> (新 this)</h5>
-<pre><code>Object proceedWith(@NonNull Object thisObject) throws Throwable</code></pre>
-<p>继续执行拦截器链，使用新的 <code>this</code> 对象和相同的参数。静态方法拦截器不应调用此方法。</p>
-
-<h5><code>proceedWith</code> (新 this 和新参数)</h5>
-<pre><code>Object proceedWith(@NonNull Object thisObject, @NonNull Object[] args) throws Throwable</code></pre>
-<p>继续执行拦截器链，使用新的 <code>this</code> 对象和新的参数。静态方法拦截器不应调用此方法。</p>
-
-<hr>
-
-<h3 id="接口-xposedinterfacectorinvoker">接口 <code>XposedInterface.CtorInvoker&lt;T&gt;</code></h3>
-<p>构造函数专用的调用器，继承自 <code>XposedInterface.Invoker</code>。</p>
-
-<h4>方法详细说明</h4>
-
-<h5><code>newInstance</code></h5>
-<pre><code>@NonNull T newInstance(Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException, InstantiationException</code></pre>
-<p>通过由调用器类型决定的 Hook 链创建一个新实例。</p>
-
-<h5><code>newInstanceSpecial</code></h5>
-<pre><code>@NonNull &lt;U&gt; U newInstanceSpecial(@NonNull Class&lt;U&gt; subClass, Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException, InstantiationException</code></pre>
-<p>为给定的子类创建实例，但使用父类的构造器进行初始化。这会跳过子类构造器的初始化。</p>
-
-<hr>
-
-<h3 id="枚举-xposedinterfaceexceptionmode">枚举 <code>XposedInterface.ExceptionMode</code></h3>
-<p>Hook 的异常处理模式。默认模式为 <code>DEFAULT</code>。</p>
-
-<h4>常量详细说明</h4>
-<ul>
-    <li><strong><code>DEFAULT</code></strong>: 遵循 <code>module.prop</code> 中的全局配置。如果未指定，默认是 <code>PROTECTIVE</code>。</li>
-    <li><strong><code>PROTECTIVE</code></strong>: <strong>推荐模式</strong>。Hooker 抛出的任何异常都会被<strong>捕获并记录日志</strong>，然后调用会<strong>像没有这个 Hook 一样继续执行</strong>。</li>
-    <li><strong><code>PASSTHROUGH</code></strong>: Hooker 抛出的异常会<strong>原样传播给调用者</strong>。主要用于调试目的。</li>
-</ul>
-
-<hr>
-
-<h3 id="接口-xposedinterfacehookbuilder">接口 <code>XposedInterface.HookBuilder</code></h3>
-<p>用于配置和最终安装 Hook 的构建器。</p>
-
-<h4>方法详细说明</h4>
-
-<h5><code>setPriority</code></h5>
-<pre><code>HookBuilder setPriority(int priority)</code></pre>
-<p>设置当前 Hook 的优先级。优先级越高，越早执行。默认优先级为 <code>PRIORITY_DEFAULT</code>。</p>
-
-<h5><code>setExceptionMode</code></h5>
-<pre><code>HookBuilder setExceptionMode(@NonNull ExceptionMode mode)</code></pre>
-<p>设置当前 Hook 的异常处理模式。默认模式为 <code>ExceptionMode.DEFAULT</code>。</p>
-
-<h5><code>intercept</code></h5>
-<pre><code>@NonNull HookHandle intercept(@NonNull Hooker hooker)</code></pre>
-<p>设置 <code>Hooker</code> 实例并<strong>最终构建和安装这个 Hook</strong>。</p>
-
-<hr>
-
-<h3 id="接口-xposedinterfacehooker">接口 <code>XposedInterface.Hooker</code></h3>
-<p>Hook 器，模块需实现此接口来提供具体的拦截逻辑。</p>
-
-<h4>方法详细说明</h4>
-
-<h5><code>intercept</code></h5>
-<pre><code>Object intercept(@NonNull Chain chain) throws Throwable</code></pre>
-<p>拦截一个方法或构造函数的调用。</p>
-
-<hr>
-
-<h3 id="接口-xposedinterfacehookhandle">接口 <code>XposedInterface.HookHandle</code></h3>
-<p>一个已安装 Hook 的句柄。</p>
-
-<h4>方法详细说明</h4>
-
-<h5><code>getExecutable</code></h5>
-<pre><code>@NonNull Executable getExecutable()</code></pre>
-<p>获取此 Hook 关联的方法或构造函数。</p>
-
-<h5><code>unhook</code></h5>
-<pre><code>void unhook()</code></pre>
-<p><strong>取消这个 Hook</strong>。此方法是幂等的，可以安全地多次调用。</p>
-
-<hr>
-
-<h3 id="接口-xposedinterfaceinvoker">接口 <code>XposedInterface.Invoker&lt;T, U&gt;</code></h3>
-<p>方法或构造函数的通用调用器，所有调用都会绕过 Java 的访问权限检查。</p>
-
-<h4>嵌套接口摘要</h4>
-<ul><li><code>XposedInterface.Invoker.Type</code>: 调用器的类型，它决定了会执行 Hook 链的哪一部分。</li></ul>
-
-<h4>方法详细说明</h4>
-
-<h5><code>setType</code></h5>
-<pre><code>T setType(@NonNull Type type)</code></pre>
-<p>设置调用器的<strong>类型</strong>，从而控制执行哪部分 Hook 链。</p>
-
-<h5><code>invoke</code></h5>
-<pre><code>Object invoke(Object thisObject, Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException</code></pre>
-<p>通过由调用器类型决定的 Hook 链<strong>调用方法/构造函数</strong>。</p>
-
-<h5><code>invokeSpecial</code></h5>
-<pre><code>Object invokeSpecial(@NonNull Object thisObject, Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException</code></pre>
-<p>执行<strong>非虚方法调用</strong>（类似于 JNI 的 <code>CallNonVirtual</code>）。</p>
-
-<hr>
-
-<h3 id="接口-xposedinterfaceinvokertype">接口 <code>XposedInterface.Invoker.Type</code></h3>
-<p>调用器类型的标记接口。此接口是密封的（sealed），只允许以下两个实现。</p>
-
-<h4>实现类详细说明</h4>
-
-<h5><code>Type.Origin</code> (record)</h5>
-<p>用于<strong>调用原始的方法/构造函数，跳过所有 Hook</strong>。</p>
-<ul><li>常量 <code>XposedInterface.Invoker.Type.ORIGIN</code> 是其一个便利实例。</li></ul>
-
-<h5><code>Type.Chain</code> (record)</h5>
-<p>用于从 Hook 链的<strong>中间开始执行</strong>，它会跳过所有优先级高于给定 <code>maxPriority</code> 值的 Hook。</p>
-<ul><li>常量 <code>XposedInterface.Invoker.Type.Chain.FULL</code> 是一个便利实例，代表<strong>执行完整的 Hook 链</strong>。</li></ul>
-
-<hr>
-
-<h3 id="类-xposedinterfacewrapper">类 <code>XposedInterfaceWrapper</code></h3>
-<p><code>XposedInterface</code> 的包装类，用于屏蔽框架的实现细节。模块通常不直接使用它。</p>
-
-<h4>构造函数</h4>
-<table><tr><th>构造函数</th><th>描述</th></tr>
-<tr><td><code>XposedInterfaceWrapper()</code></td><td>创建一个未附加框架的包装器实例。</td></tr></table>
-
-<h4>方法详细说明</h4>
-<p>大多数方法直接委托给内部的 <code>XposedInterface</code> 实例，其行为与 <code>XposedInterface</code> 中定义的相同。</p>
-
-<h5><code>attachFramework</code></h5>
-<pre><code>public final void attachFramework(@NonNull XposedInterface base)</code></pre>
-<p>将框架接口附加到模块。<strong>模块永远不应调用此方法</strong>。</p>
-
-<p><strong>直接已知子类</strong>: <code>XposedModule</code></p>
-
-<hr>
-
-<h3 id="类-xposedmodule">类 <code>XposedModule</code></h3>
-<p><strong>所有 Xposed 模块入口类都应继承的基类</strong>。每个进程会且只会实例化一次。</p>
-<p><strong>继承关系</strong>: <code>java.lang.Object</code> → <code>XposedInterfaceWrapper</code> → <code>XposedModule</code></p>
-<p><strong>实现的接口</strong>: <code>XposedInterface</code>, <code>XposedModuleInterface</code></p>
-
-<h4>构造函数</h4>
-<table><tr><th>构造函数</th><th>描述</th></tr>
-<tr><td><code>XposedModule()</code></td><td>创建一个模块实例。</td></tr></table>
-
-<hr>
-
-<h3 id="接口-xposedmoduleinterface">接口 <code>XposedModuleInterface</code></h3>
-<p>模块初始化的主接口。<code>XposedModule</code> 实现了它。</p>
-
-<h4>方法详细说明</h4>
-
-<h5 id="onmoduleloaded"><code>onModuleLoaded</code></h5>
-<pre><code>default void onModuleLoaded(@NonNull ModuleLoadedParam param)</code></pre>
-<p>当模块被加载到目标进程时调用。此回调在进程的生命周期中<strong>保证只被调用一次</strong>。</p>
-
-<h5 id="onpackageloaded"><code>onPackageLoaded</code></h5>
-<pre><code>@RequiresApi(29)
-default void onPackageLoaded(@NonNull PackageLoadedParam param)</code></pre>
-<p>当一个有代码的包被加载到进程时调用。此时默认的 <code>ClassLoader</code> 已经就绪（API 29+）。</p>
-
-<h5 id="onpackageready"><code>onPackageReady</code></h5>
-<pre><code>default void onPackageReady(@NonNull PackageReadyParam param)</code></pre>
-<p>当包的 <code>ClassLoader</code> 完全准备好后调用。</p>
-
-<h5 id="onsystemserverstarting"><code>onSystemServerStarting</code></h5>
-<pre><code>default void onSystemServerStarting(@NonNull SystemServerStartingParam param)</code></pre>
-<p>当 system_server 准备启动关键服务时调用。</p>
-
-<h4>嵌套接口摘要</h4>
-<ul>
-    <li><code>XposedModuleInterface.ModuleLoadedParam</code> – 包装了模块被加载时的进程信息。</li>
-    <li><code>XposedModuleInterface.PackageLoadedParam</code> – 包装了被加载包的信息。</li>
-    <li><code>XposedModuleInterface.PackageReadyParam</code> – 包装了包就绪时的信息。</li>
-    <li><code>XposedModuleInterface.SystemServerStartingParam</code> – 包装了 system_server 启动时的信息。</li>
-</ul>
-
-<p><strong><code>ModuleLoadedParam</code> 方法</strong>:</p>
-<ul>
-    <li><code>boolean isSystemServer()</code> – 当前进程是否为 system_server</li>
-    <li><code>String getProcessName()</code> – 获取进程名称</li>
-</ul>
-
-<p><strong><code>PackageLoadedParam</code> 方法</strong>:</p>
-<ul>
-    <li><code>String getPackageName()</code> – 获取包名</li>
-    <li><code>ApplicationInfo getApplicationInfo()</code> – 获取 ApplicationInfo</li>
-    <li><code>boolean isFirstPackage()</code> – 是否为进程中第一个/主包</li>
-    <li><code>ClassLoader getDefaultClassLoader()</code> – 获取默认类加载器（API 29+）</li>
-</ul>
-
-<p><strong><code>PackageReadyParam</code> 方法</strong>（继承 <code>PackageLoadedParam</code>）:</p>
-<ul>
-    <li><code>ClassLoader getClassLoader()</code> – 获取包类加载器</li>
-    <li><code>AppComponentFactory getAppComponentFactory()</code> – 获取 AppComponentFactory（API 28+）</li>
-</ul>
-
-<p><strong><code>SystemServerStartingParam</code> 方法</strong>:</p>
-<ul>
-    <li><code>ClassLoader getClassLoader()</code> – 获取 system_server 类加载器</li>
-</ul>
-
-<hr>
-
-<h2 id="包-io-github-libxposed-apierror">包 <code>io.github.libxposed.api.error</code></h2>
-<p>此包包含了框架在遇到错误时会抛出的异常类。</p>
-
-<h3 id="类-xposedframeworkerror">类 <code>XposedFrameworkError</code></h3>
-<p>表示 Xposed 框架的功能出现问题。这是一个 <code>Error</code>，而不是 <code>Exception</code>。</p>
-<p><strong>继承关系</strong>: <code>java.lang.Object</code> → <code>Throwable</code> → <code>Error</code> → <code>XposedFrameworkError</code></p>
-<p><strong>直接已知子类</strong>: <code>HookFailedError</code></p>
-
-<h4>构造函数详细说明</h4>
-
-<h5><code>XposedFrameworkError(String message)</code></h5>
-<pre><code>public XposedFrameworkError(String message)</code></pre>
-
-<h5><code>XposedFrameworkError(String message, Throwable cause)</code></h5>
-<pre><code>public XposedFrameworkError(String message, Throwable cause)</code></pre>
-
-<h5><code>XposedFrameworkError(Throwable cause)</code></h5>
-<pre><code>public XposedFrameworkError(Throwable cause)</code></pre>
-
-<h3 id="类-hookfailederror">类 <code>HookFailedError</code></h3>
-<p>表示一次 Hook 操作因为框架内部错误而失败。</p>
-<p><strong>继承关系</strong>: <code>...</code> → <code>Error</code> → <code>XposedFrameworkError</code> → <code>HookFailedError</code></p>
-<p><strong>设计说明</strong>: 此类继承自 <code>Error</code>，表明它是致命的框架 Bug。<strong>模块开发者不应尝试捕获此错误</strong>，而应向框架维护者报告问题。</p>
-
-<h4>构造函数详细说明</h4>
-
-<h5><code>HookFailedError(String message)</code></h5>
-<pre><code>public HookFailedError(String message)</code></pre>
-
-<h5><code>HookFailedError(String message, Throwable cause)</code></h5>
-<pre><code>public HookFailedError(String message, Throwable cause)</code></pre>
-
-<h5><code>HookFailedError(Throwable cause)</code></h5>
-<pre><code>public HookFailedError(Throwable cause)</code></pre>
-
-<hr>
-<p style="text-align: center; color: #666; margin-top: 40px;">libxposed API 完整参考文档 | 中文版</p>
+<!-- ================= 包 io.github.libxposed.api ================= -->
+<h2 id="package-api">📦 包 io.github.libxposed.api</h2>
+<div class="package-content">
+
+    <!-- ********** XposedInterface ********** -->
+    <div class="class-card" id="XposedInterface">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🔌 <code>interface XposedInterface</code> <span class="badge">核心接口</span></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>Xposed 框架提供给模块操作应用进程的核心接口。</p>
+            
+            <div class="section-title">📌 嵌套接口摘要</div>
+            <table>
+                <tr><th>接口</th><th>描述</th></tr>
+                <tr><td><code>XposedInterface.Chain</code></td><td>方法或构造函数的拦截器链</td></tr>
+                <tr><td><code>XposedInterface.CtorInvoker&lt;T&gt;</code></td><td>构造函数的调用器</td></tr>
+                <tr><td><code>XposedInterface.ExceptionMode</code></td><td>Hook 异常处理模式枚举</td></tr>
+                <tr><td><code>XposedInterface.HookBuilder</code></td><td>Hook 配置构建器</td></tr>
+                <tr><td><code>XposedInterface.Hooker</code></td><td>Hooker 接口</td></tr>
+                <tr><td><code>XposedInterface.HookHandle</code></td><td>Hook 句柄</td></tr>
+                <tr><td><code>XposedInterface.Invoker&lt;T,U&gt;</code></td><td>通用调用器</td></tr>
+            </table>
+
+            <div class="section-title">📌 字段常量</div>
+            <table>
+                <tr><th>常量</th><th>值</th><th>描述</th></tr>
+                <tr><td><code>API_101</code></td><td>101</td><td>第一个 API 版本，且模块不能注入 zygote，只在作用域进程内加载。</td></tr>
+                <tr><td><code>LIB_API</code></td><td>101</td><td>此库的 API 版本，模块应使用 getApiVersion() 检查运行时版本。</td></tr>
+                <tr><td><code>PROP_CAP_SYSTEM</code></td><td>1&lt;&lt;0</td><td>框架有能力 Hook system_server 和其他系统进程。</td></tr>
+                <tr><td><code>PROP_CAP_REMOTE</code></td><td>1&lt;&lt;1</td><td>框架提供远程配置和远程文件支持。</td></tr>
+                <tr><td><code>PROP_RT_API_PROTECTION</code></td><td>1&lt;&lt;32</td><td>禁止通过反射或动态加载的代码访问 Xposed API。</td></tr>
+                <tr><td><code>PRIORITY_DEFAULT</code></td><td>50</td><td>默认优先级</td></tr>
+                <tr><td><code>PRIORITY_LOWEST</code></td><td>0</td><td>链末尾执行</td></tr>
+                <tr><td><code>PRIORITY_HIGHEST</code></td><td>100</td><td>链开头执行</td></tr>
+            </table>
+
+            <div class="section-title">⚙️ 方法详细说明</div>
+            <div class="method-signature"><code>default int getApiVersion()</code></div>
+            <p>获取运行时 Xposed API 版本。框架实现不应重写此方法。</p>
+            <div class="method-signature"><code>@NonNull String getFrameworkName()</code></div>
+            <p>获取当前 Xposed 框架实现的名称。</p>
+            <div class="method-signature"><code>@NonNull String getFrameworkVersion()</code></div>
+            <p>获取当前 Xposed 框架实现的版本字符串。</p>
+            <div class="method-signature"><code>long getFrameworkVersionCode()</code></div>
+            <p>获取当前 Xposed 框架实现的版本号（长整型）。</p>
+            <div class="method-signature"><code>long getFrameworkProperties()</code></div>
+            <p>获取 Xposed 框架属性 (PROP_CAP_* 和 PROP_RT_*)。</p>
+            <div class="method-signature"><code>@NonNull HookBuilder hook(@NonNull Executable origin)</code></div>
+            <p>Hook 一个普通方法或构造函数。</p>
+            <div class="method-signature"><code>@NonNull HookBuilder hookClassInitializer(@NonNull Class&lt;?&gt; origin)</code></div>
+            <p>Hook 类的静态初始化器 &lt;clinit&gt;。如果类已初始化，Hook 不会被调用。</p>
+            <div class="method-signature"><code>boolean deoptimize(@NonNull Executable executable)</code></div>
+            <p>去优化一个方法/构造函数，解决因内联导致 Hook 不生效的问题。</p>
+            <div class="method-signature"><code>@NonNull Invoker&lt;?, Method&gt; getInvoker(@NonNull Method method)</code></div>
+            <p>获取方法调用器（绕过访问检查，默认 FULL）。</p>
+            <div class="method-signature"><code>@NonNull &lt;T&gt; CtorInvoker&lt;T&gt; getInvoker(@NonNull Constructor&lt;T&gt; constructor)</code></div>
+            <p>获取构造函数调用器（绕过访问检查，默认 FULL）。</p>
+            <div class="method-signature"><code>void log(int priority, @Nullable String tag, @NonNull String msg)</code></div>
+            <p>向 Xposed 日志写入消息。</p>
+            <div class="method-signature"><code>void log(int priority, @Nullable String tag, @NonNull String msg, @Nullable Throwable tr)</code></div>
+            <p>向 Xposed 日志写入带异常的消息。</p>
+            <div class="method-signature"><code>@NonNull ApplicationInfo getModuleApplicationInfo()</code></div>
+            <p>获取模块自身的 ApplicationInfo。</p>
+            <div class="method-signature"><code>@NonNull SharedPreferences getRemotePreferences(@NonNull String group)</code></div>
+            <p>获取远程配置（在被 Hook 应用中只读）。支持 UnsupportedOperationException。</p>
+            <div class="method-signature"><code>@NonNull String[] listRemoteFiles()</code></div>
+            <p>列出模块共享数据目录下的所有文件。</p>
+            <div class="method-signature"><code>@NonNull ParcelFileDescriptor openRemoteFile(@NonNull String name) throws FileNotFoundException</code></div>
+            <p>只读方式打开模块共享文件，文件名不能包含路径分隔符和 . .. 。</p>
+        </div>
+    </div>
+
+    <!-- ********** Chain ********** -->
+    <div class="class-card" id="Chain">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>⛓️ <code>interface XposedInterface.Chain</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>拦截器链，代表一次方法或构造函数的调用。Chain 对象不能跨线程共享，也不能在 intercept 结束后重用。</p>
+            <div class="section-title">方法详细说明</div>
+            <div class="method-signature"><code>@NonNull Executable getExecutable()</code></div>
+            <div class="method-signature"><code>Object getThisObject()</code> — 返回 this 指针（静态方法返回 null）</div>
+            <div class="method-signature"><code>@NonNull List&lt;Object&gt; getArgs()</code> — 不可变的参数列表</div>
+            <div class="method-signature"><code>Object getArg(int index) throws IndexOutOfBoundsException, ClassCastException</code></div>
+            <div class="method-signature"><code>Object proceed() throws Throwable</code> — 使用相同 this 和参数继续链</div>
+            <div class="method-signature"><code>Object proceed(@NonNull Object[] args) throws Throwable</code> — 替换参数继续链</div>
+            <div class="method-signature"><code>Object proceedWith(@NonNull Object thisObject) throws Throwable</code> — 替换 this 继续链（静态不可用）</div>
+            <div class="method-signature"><code>Object proceedWith(@NonNull Object thisObject, @NonNull Object[] args) throws Throwable</code> — 替换 this 和参数继续链</div>
+        </div>
+    </div>
+
+    <!-- ********** CtorInvoker ********** -->
+    <div class="class-card" id="CtorInvoker">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🏗️ <code>interface XposedInterface.CtorInvoker&lt;T&gt;</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>构造函数专用调用器，继承自 <code>Invoker</code>。</p>
+            <div class="method-signature"><code>@NonNull T newInstance(Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException, InstantiationException</code></div>
+            <div class="method-signature"><code>@NonNull &lt;U&gt; U newInstanceSpecial(@NonNull Class&lt;U&gt; subClass, Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException, InstantiationException</code></div>
+            <p>说明：<code>newInstanceSpecial</code> 会跳过子类构造器初始化，可能使子类字段未初始化，用于高级自定义初始化场景。</p>
+        </div>
+    </div>
+
+    <!-- ********** ExceptionMode ********** -->
+    <div class="class-card" id="ExceptionMode">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>⚠️ <code>enum XposedInterface.ExceptionMode</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>Hook 异常处理模式。</p>
+            <ul>
+                <li><code>DEFAULT</code> — 遵循 module.prop 配置，默认 PROTECTIVE。</li>
+                <li><code>PROTECTIVE</code> — 捕获并记录 Hooker 异常，调用继续（推荐）。</li>
+                <li><code>PASSTHROUGH</code> — 异常直接传播给调用者（调试用）。</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ********** HookBuilder ********** -->
+    <div class="class-card" id="HookBuilder">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🛠️ <code>interface XposedInterface.HookBuilder</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <div class="method-signature"><code>HookBuilder setPriority(int priority)</code> — 设置优先级</div>
+            <div class="method-signature"><code>HookBuilder setExceptionMode(@NonNull ExceptionMode mode)</code> — 设置异常模式</div>
+            <div class="method-signature"><code>@NonNull HookHandle intercept(@NonNull Hooker hooker)</code> — 安装 Hook，返回句柄</div>
+        </div>
+    </div>
+
+    <!-- ********** Hooker ********** -->
+    <div class="class-card" id="Hooker">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🎣 <code>interface XposedInterface.Hooker</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <div class="method-signature"><code>Object intercept(@NonNull Chain chain) throws Throwable</code></div>
+            <p>拦截方法/构造函数调用，通常调用 chain.proceed() 并返回结果。</p>
+        </div>
+    </div>
+
+    <!-- ********** HookHandle ********** -->
+    <div class="class-card" id="HookHandle">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🔖 <code>interface XposedInterface.HookHandle</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <div class="method-signature"><code>@NonNull Executable getExecutable()</code></div>
+            <div class="method-signature"><code>void unhook()</code> — 取消 Hook，幂等。</div>
+        </div>
+    </div>
+
+    <!-- ********** Invoker ********** -->
+    <div class="class-card" id="Invoker">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>📞 <code>interface XposedInterface.Invoker&lt;T,U&gt;</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <div class="method-signature"><code>T setType(@NonNull Type type)</code> — 设置调用器类型</div>
+            <div class="method-signature"><code>Object invoke(Object thisObject, Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException</code></div>
+            <div class="method-signature"><code>Object invokeSpecial(@NonNull Object thisObject, Object... args) throws InvocationTargetException, IllegalArgumentException, IllegalAccessException</code></div>
+        </div>
+    </div>
+
+    <!-- ********** Invoker.Type ********** -->
+    <div class="class-card" id="InvokerType">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🎛️ <code>interface XposedInterface.Invoker.Type</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>调用器类型的密封接口，有两个实现：</p>
+            <ul>
+                <li><code>Type.Origin</code> — 调用原始方法，跳过所有 Hook。常量 <code>ORIGIN</code></li>
+                <li><code>Type.Chain</code> — 从中间执行，跳过优先级高于 maxPriority 的 Hook。常量 <code>FULL</code> (maxPriority = PRIORITY_HIGHEST)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ********** XposedInterfaceWrapper ********** -->
+    <div class="class-card" id="XposedInterfaceWrapper">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>📦 <code>class XposedInterfaceWrapper</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>包装类，屏蔽框架实现细节。模块通常不直接使用。</p>
+            <div class="method-signature"><code>public final void attachFramework(@NonNull XposedInterface base)</code> — 模块不应调用。</div>
+            <p>其他方法均委托给内部 XposedInterface 实例，行为同上。</p>
+        </div>
+    </div>
+
+    <!-- ********** XposedModule ********** -->
+    <div class="class-card" id="XposedModule">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🧩 <code>abstract class XposedModule</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>所有模块入口类的基类，每个进程只实例化一次。继承自 XposedInterfaceWrapper 并实现 XposedModuleInterface。</p>
+        </div>
+    </div>
+
+    <!-- ********** XposedModuleInterface ********** -->
+    <div class="class-card" id="XposedModuleInterface">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>🔄 <code>interface XposedModuleInterface</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <div class="method-signature"><code>default void onModuleLoaded(@NonNull ModuleLoadedParam param)</code> — 模块加载到进程时调用（一次）</div>
+            <div class="method-signature"><code>@RequiresApi(29) default void onPackageLoaded(@NonNull PackageLoadedParam param)</code> — 有代码的包加载时调用，默认 ClassLoader 就绪。</div>
+            <div class="method-signature"><code>default void onPackageReady(@NonNull PackageReadyParam param)</code> — AppComponentFactory 实例化类加载器后调用。</div>
+            <div class="method-signature"><code>default void onSystemServerStarting(@NonNull SystemServerStartingParam param)</code> — system_server 启动时调用（替代第一个包加载阶段）。</div>
+            
+            <div class="section-title">嵌套接口</div>
+            <ul>
+                <li><code>ModuleLoadedParam</code> — 提供 <code>isSystemServer()</code> 和 <code>getProcessName()</code></li>
+                <li><code>PackageLoadedParam</code> — 提供 <code>getPackageName()</code>, <code>getApplicationInfo()</code>, <code>isFirstPackage()</code>, <code>getDefaultClassLoader()</code> (API 29+)</li>
+                <li><code>PackageReadyParam</code> — 继承 PackageLoadedParam，增加 <code>getClassLoader()</code> 和 <code>getAppComponentFactory()</code> (API 28+)</li>
+                <li><code>SystemServerStartingParam</code> — 提供 <code>getClassLoader()</code></li>
+            </ul>
+        </div>
+    </div>
+</div> <!-- end package-content -->
+
+<!-- ================= 包 error ================= -->
+<h2 id="package-error">📦 包 io.github.libxposed.api.error</h2>
+<div class="package-content">
+    <div class="class-card" id="XposedFrameworkError">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>❌ <code>class XposedFrameworkError extends Error</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>表示 Xposed 框架功能出现问题。</p>
+            <div class="method-signature"><code>public XposedFrameworkError(String message)</code></div>
+            <div class="method-signature"><code>public XposedFrameworkError(String message, Throwable cause)</code></div>
+            <div class="method-signature"><code>public XposedFrameworkError(Throwable cause)</code></div>
+        </div>
+    </div>
+
+    <div class="class-card" id="HookFailedError">
+        <div class="class-header" onclick="toggleDetails(this)">
+            <span>💥 <code>class HookFailedError extends XposedFrameworkError</code></span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="class-details">
+            <p>表示 Hook 因框架内部错误而失败。设计为 Error，模块不应尝试捕获，应向框架维护者报告。</p>
+            <div class="method-signature"><code>public HookFailedError(String message)</code></div>
+            <div class="method-signature"><code>public HookFailedError(String message, Throwable cause)</code></div>
+            <div class="method-signature"><code>public HookFailedError(Throwable cause)</code></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    📄 libxposed API 完整参考文档 · 基于官方源码和 javadoc 生成 · 中文版
+</footer>
+
+<script>
+    function toggleDetails(headerElement) {
+        const detailsDiv = headerElement.nextElementSibling;
+        if (detailsDiv && detailsDiv.classList) {
+            detailsDiv.classList.toggle('show');
+            const iconSpan = headerElement.querySelector('.toggle-icon');
+            if (iconSpan) {
+                iconSpan.textContent = detailsDiv.classList.contains('show') ? '▲' : '▼';
+            }
+        }
+    }
+
+    // 可选：展开 URL 锚点对应的类
+    if (window.location.hash) {
+        const id = window.location.hash.substring(1);
+        const targetCard = document.getElementById(id);
+        if (targetCard && targetCard.classList && targetCard.classList.contains('class-card')) {
+            const details = targetCard.querySelector('.class-details');
+            const header = targetCard.querySelector('.class-header');
+            if (details && !details.classList.contains('show')) {
+                details.classList.add('show');
+                const icon = header.querySelector('.toggle-icon');
+                if (icon) icon.textContent = '▲';
+            }
+            targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+</script>
 
 </body>
 </html>
